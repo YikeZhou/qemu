@@ -114,7 +114,7 @@ struct CPURISCVState {
 
     target_ulong frm;
 
-    target_ulong badaddr;
+    target_ulong tval;
 
     target_ulong user_ver;
     target_ulong priv_ver;
@@ -151,8 +151,8 @@ struct CPURISCVState {
 
     target_ulong sptbr;  /* until: priv-1.9.1 */
     target_ulong satp;   /* since: priv-1.10.0 */
-    target_ulong sbadaddr;
-    target_ulong mbadaddr;
+    target_ulong stval;
+    target_ulong mtval;
     target_ulong medeleg;
 
     target_ulong stvec;
@@ -162,7 +162,6 @@ struct CPURISCVState {
     target_ulong mtvec;
     target_ulong mepc;
     target_ulong mcause;
-    target_ulong mtval;  /* since: priv-1.10.0 */
 
     target_ulong scounteren;
     target_ulong mcounteren;

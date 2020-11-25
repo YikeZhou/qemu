@@ -95,7 +95,7 @@ static void generate_exception(DisasContext *ctx, int excp)
 static void generate_exception_mbadaddr(DisasContext *ctx, int excp)
 {
     tcg_gen_movi_tl(cpu_pc, ctx->base.pc_next);
-    tcg_gen_st_tl(cpu_pc, cpu_env, offsetof(CPURISCVState, badaddr));
+    tcg_gen_st_tl(cpu_pc, cpu_env, offsetof(CPURISCVState, tval));
     TCGv_i32 helper_tmp = tcg_const_i32(excp);
     gen_helper_raise_exception(cpu_env, helper_tmp);
     tcg_temp_free_i32(helper_tmp);

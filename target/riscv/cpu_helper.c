@@ -340,7 +340,7 @@ static void raise_mmu_exception(CPURISCVState *env, target_ulong address,
     default:
         g_assert_not_reached();
     }
-    env->badaddr = address;
+    env->tval = address;
 }
 
 hwaddr riscv_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
@@ -375,7 +375,7 @@ void riscv_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
     default:
         g_assert_not_reached();
     }
-    env->badaddr = addr;
+    env->tval = addr;
     riscv_raise_exception(env, cs->exception_index, retaddr);
 }
 
@@ -469,7 +469,7 @@ void riscv_cpu_do_interrupt(CPUState *cs)
     };
 
     if (!async) {
-        /* set tval to badaddr for traps with address information */
+        /* set tval for traps with address information */
         switch (cause) {
         case RISCV_EXCP_INST_ADDR_MIS:
         case RISCV_EXCP_INST_ACCESS_FAULT:
@@ -480,7 +480,7 @@ void riscv_cpu_do_interrupt(CPUState *cs)
         case RISCV_EXCP_INST_PAGE_FAULT:
         case RISCV_EXCP_LOAD_PAGE_FAULT:
         case RISCV_EXCP_STORE_PAGE_FAULT:
-            tval = env->badaddr;
+            tval = env->tval;
             break;
         default:
             break;
@@ -506,7 +506,7 @@ void riscv_cpu_do_interrupt(CPUState *cs)
         env->mstatus = s;
         env->scause = cause | ~(((target_ulong)-1) >> async);
         env->sepc = env->pc;
-        env->sbadaddr = tval;
+        env->stval = tval;
         env->pc = (env->stvec >> 2 << 2) +
             ((async && (env->stvec & 3) == 1) ? cause * 4 : 0);
         riscv_cpu_set_mode(env, PRV_S);
@@ -520,7 +520,7 @@ void riscv_cpu_do_interrupt(CPUState *cs)
         env->mstatus = s;
         env->mcause = cause | ~(((target_ulong)-1) >> async);
         env->mepc = env->pc;
-        env->mbadaddr = tval;
+        env->mtval = tval;
         env->pc = (env->mtvec >> 2 << 2) +
             ((async && (env->mtvec & 3) == 1) ? cause * 4 : 0);
         riscv_cpu_set_mode(env, PRV_M);

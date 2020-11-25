@@ -166,7 +166,6 @@
 #define CSR_SBADADDR        0x143
 
 /* Supervisor Protection and Translation */
-#define CSR_SPTBR           0x180
 #define CSR_SATP            0x180
 
 /* Physical Memory Protection */

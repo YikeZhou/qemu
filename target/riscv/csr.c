@@ -534,15 +534,15 @@ static int write_mcause(CPURISCVState *env, int csrno, target_ulong val)
     return 0;
 }
 
-static int read_mbadaddr(CPURISCVState *env, int csrno, target_ulong *val)
+static int read_mtval(CPURISCVState *env, int csrno, target_ulong *val)
 {
-    *val = env->mbadaddr;
+    *val = env->mtval;
     return 0;
 }
 
-static int write_mbadaddr(CPURISCVState *env, int csrno, target_ulong val)
+static int write_mtval(CPURISCVState *env, int csrno, target_ulong val)
 {
-    env->mbadaddr = val;
+    env->mtval = val;
     return 0;
 }
 
@@ -670,15 +670,15 @@ static int write_scause(CPURISCVState *env, int csrno, target_ulong val)
     return 0;
 }
 
-static int read_sbadaddr(CPURISCVState *env, int csrno, target_ulong *val)
+static int read_stval(CPURISCVState *env, int csrno, target_ulong *val)
 {
-    *val = env->sbadaddr;
+    *val = env->stval;
     return 0;
 }
 
-static int write_sbadaddr(CPURISCVState *env, int csrno, target_ulong val)
+static int write_stval(CPURISCVState *env, int csrno, target_ulong val)
 {
-    env->sbadaddr = val;
+    env->stval = val;
     return 0;
 }
 
@@ -895,7 +895,7 @@ static riscv_csr_operations csr_ops[CSR_TABLE_SIZE] = {
     [CSR_MSCRATCH] =            { any,  read_mscratch,    write_mscratch    },
     [CSR_MEPC] =                { any,  read_mepc,        write_mepc        },
     [CSR_MCAUSE] =              { any,  read_mcause,      write_mcause      },
-    [CSR_MBADADDR] =            { any,  read_mbadaddr,    write_mbadaddr    },
+    [CSR_MTVAL] =               { any,  read_mtval,       write_mtval       },
     [CSR_MIP] =                 { any,  NULL,     NULL,     rmw_mip         },
 
     /* Supervisor Trap Setup */
@@ -908,7 +908,7 @@ static riscv_csr_operations csr_ops[CSR_TABLE_SIZE] = {
     [CSR_SSCRATCH] =            { smode, read_sscratch,    write_sscratch    },
     [CSR_SEPC] =                { smode, read_sepc,        write_sepc        },
     [CSR_SCAUSE] =              { smode, read_scause,      write_scause      },
-    [CSR_SBADADDR] =            { smode, read_sbadaddr,    write_sbadaddr    },
+    [CSR_STVAL] =               { smode, read_stval,       write_stval       },
     [CSR_SIP] =                 { smode, NULL,     NULL,     rmw_sip         },
 
     /* Supervisor Protection and Translation */
