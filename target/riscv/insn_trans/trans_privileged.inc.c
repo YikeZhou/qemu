@@ -91,7 +91,17 @@ static bool trans_sfence_vma(DisasContext *ctx, arg_sfence_vma *a)
 {
 #ifndef CONFIG_USER_ONLY
     if (ctx->priv_ver == PRIV_VERSION_1_10_0) {
-        gen_helper_tlb_flush(cpu_env);
+        TCGv asid = tcg_temp_new();
+        TCGv vaddr = tcg_temp_new();
+
+        if (a->rs2 == 0) {
+            /* -1 isn't a valid ASID, use it to mean 'global' */
+            tcg_gen_movi_tl(asid, -1);
+        } else {
+            gen_get_gpr(asid, a->rs2);
+        }
+        gen_get_gpr(vaddr, a->rs1);
+        gen_helper_tlb_flush(cpu_env, asid, vaddr);
         return true;
     }
 #endif
@@ -102,7 +112,12 @@ static bool trans_sfence_vm(DisasContext *ctx, arg_sfence_vm *a)
 {
 #ifndef CONFIG_USER_ONLY
     if (ctx->priv_ver <= PRIV_VERSION_1_09_1) {
-        gen_helper_tlb_flush(cpu_env);
+        TCGv asid = tcg_temp_new();
+        TCGv vaddr = tcg_temp_new();
+
+        tcg_gen_movi_tl(asid, -1);
+        gen_get_gpr(vaddr, a->rs1);
+        gen_helper_tlb_flush(cpu_env, asid, vaddr);
         return true;
     }
 #endif

@@ -141,7 +141,7 @@ void helper_wfi(CPURISCVState *env)
     }
 }
 
-void helper_tlb_flush(CPURISCVState *env)
+void helper_tlb_flush(CPURISCVState *env, target_ulong asid, target_ulong vaddr)
 {
     RISCVCPU *cpu = riscv_env_get_cpu(env);
     CPUState *cs = CPU(cpu);
@@ -150,7 +150,11 @@ void helper_tlb_flush(CPURISCVState *env)
         get_field(env->mstatus, MSTATUS_TVM)) {
         riscv_raise_exception(env, RISCV_EXCP_ILLEGAL_INST, GETPC());
     } else {
-        tlb_flush(cs);
+        if (vaddr == 0) {
+            tlb_flush(cs);
+        } else {
+            tlb_flush_page(cs, vaddr & TARGET_PAGE_MASK);
+        }
     }
 }
 
