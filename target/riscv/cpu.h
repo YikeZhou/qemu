@@ -96,7 +96,7 @@ enum {
 
 #define TRANSLATE_FAIL 1
 #define TRANSLATE_SUCCESS 0
-#define NB_MMU_MODES 4
+#define NB_MMU_MODES 8
 #define MMU_USER_IDX 3
 
 #define MAX_RISCV_PMPS (16)

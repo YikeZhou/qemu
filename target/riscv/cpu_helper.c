@@ -30,7 +30,7 @@ int riscv_cpu_mmu_index(CPURISCVState *env, bool ifetch)
 #ifdef CONFIG_USER_ONLY
     return 0;
 #else
-    return env->priv;
+    return env->priv | (ifetch ? 4 : 0);
 #endif
 }
 
@@ -132,7 +132,7 @@ static int get_physical_address(CPURISCVState *env, hwaddr *physical,
      * correct, but the value visible to the exception handler
      * (riscv_cpu_do_interrupt) is correct */
 
-    int mode = mmu_idx;
+    int mode = mmu_idx & 3;
 
     if (mode == PRV_M && access_type != MMU_INST_FETCH) {
         if (get_field(env->mstatus, MSTATUS_MPRV)) {
