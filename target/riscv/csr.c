@@ -716,16 +716,16 @@ static int write_satp(CPURISCVState *env, int csrno, target_ulong val)
         env->sptbr = val & (((target_ulong)
             1 << (TARGET_PHYS_ADDR_SPACE_BITS - PGSHIFT)) - 1);
     }
-    if (env->priv_ver >= PRIV_VERSION_1_10_0 &&
-        validate_vm(env, get_field(val, SATP_MODE)) &&
-        ((val ^ env->satp) & (SATP_MODE | SATP_ASID | SATP_PPN)))
-    {
+    if (env->priv_ver >= PRIV_VERSION_1_10_0) {
         if (env->priv == PRV_S && get_field(env->mstatus, MSTATUS_TVM)) {
             return -1;
-        } else {
-            tlb_flush(CPU(riscv_env_get_cpu(env)));
-            env->satp = val;
         }
+        if (!validate_vm(env, get_field(val, SATP_MODE))) return 0;
+        /* We only need to flush TLB per ASID change */
+        if ((val ^ env->satp) & (SATP_MODE | SATP_ASID)) {
+            tlb_flush(CPU(riscv_env_get_cpu(env)));
+        }
+        env->satp = val;
     }
     return 0;
 }
