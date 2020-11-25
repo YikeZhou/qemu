@@ -21,6 +21,7 @@
 #include "qemu/log.h"
 #include "cpu.h"
 #include "exec/exec-all.h"
+#include "exec/cpu_ldst.h"
 #include "tcg-op.h"
 #include "trace.h"
 
@@ -485,6 +486,17 @@ void riscv_cpu_do_interrupt(CPUState *cs)
         default:
             break;
         }
+
+        /* For illegal instruction faults, we can set tval to be the faulting
+           instruction to facilitate the trap code */
+        if (cause == RISCV_EXCP_ILLEGAL_INST) {
+            tval = cpu_ldl_code(env, env->pc);
+            /* For compressed instructions we need to zero-out upper bits */
+            if (extract32(tval, 0, 2) != 3) {
+                tval &= 0xFFFF;
+            }
+        }
+
         /* ecall is dispatched as one cause so translate based on mode */
         if (cause == RISCV_EXCP_U_ECALL) {
             assert(env->priv <= 3);
