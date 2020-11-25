@@ -6260,6 +6260,10 @@ QEMU_CFLAGS="$pixman_cflags $fdt_cflags $QEMU_CFLAGS"
 QEMU_LDFLAGS="$fdt_ldflags $QEMU_LDFLAGS"
 libs_softmmu="$pixman_libs $libs_softmmu"
 
+QEMU_CFLAGS="$(pkg-config --cflags tlbsim) $QEMU_CFLAGS"
+QEMU_LDFLAGS="$(pkg-config --libs-only-L tlbsim) $QEMU_LDFLAGS"
+libs_softmmu="$(pkg-config --libs-only-l tlbsim) $libs_softmmu"
+
 echo "Install prefix    $prefix"
 echo "BIOS directory    $(eval echo $qemu_datadir)"
 echo "firmware path     $(eval echo $firmwarepath)"

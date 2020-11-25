@@ -18,3 +18,8 @@ target/riscv/decode_insn16.inc.c: \
 
 target/riscv/translate.o: target/riscv/decode_insn32.inc.c \
 	target/riscv/decode_insn16.inc.c
+
+ifeq ($(CONFIG_USER_ONLY),y)
+else
+obj-y += tlb.o
+endif

@@ -268,6 +268,11 @@ int riscv_cpu_handle_mmu_fault(CPUState *cpu, vaddr address, int size,
 char *riscv_isa_string(RISCVCPU *cpu);
 void riscv_cpu_list(void);
 
+#ifndef CONFIG_USER_ONLY
+int riscv_tlb_access(CPURISCVState* env, hwaddr *physical, int *prot,
+        target_ulong addr, int access_type, int mmu_idx);
+#endif
+
 #define cpu_signal_handler riscv_cpu_signal_handler
 #define cpu_list riscv_cpu_list
 #define cpu_mmu_index riscv_cpu_mmu_index

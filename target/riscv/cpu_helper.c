@@ -419,7 +419,11 @@ int riscv_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size,
              %d\n", __func__, env->pc, address, rw, mmu_idx);
 
 #if !defined(CONFIG_USER_ONLY)
-    ret = get_physical_address(env, &pa, &prot, address, rw, mmu_idx);
+    if (env->priv_ver >= PRIV_VERSION_1_10_0) {
+        ret = riscv_tlb_access(env, &pa, &prot, address, rw, mmu_idx);
+    } else {
+        ret = get_physical_address(env, &pa, &prot, address, rw, mmu_idx);
+    }
     qemu_log_mask(CPU_LOG_MMU,
             "%s address=%" VADDR_PRIx " ret %d physical " TARGET_FMT_plx
              " prot %d\n", __func__, address, ret, pa, prot);

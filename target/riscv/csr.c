@@ -23,6 +23,8 @@
 #include "qemu/main-loop.h"
 #include "exec/exec-all.h"
 
+#include <tlbsim.h>
+
 /* CSR function table */
 static riscv_csr_operations csr_ops[];
 
@@ -689,6 +691,12 @@ static int rmw_sip(CPURISCVState *env, int csrno, target_ulong *ret_value,
                    write_mask & env->mideleg);
 }
 
+static int write_tlb(CPURISCVState *env, int csrno, target_ulong val)
+{
+    tlbsim_reset_counters(val);
+    return 0;
+}
+
 /* Supervisor Protection and Translation */
 static int read_satp(CPURISCVState *env, int csrno, target_ulong *val)
 {
@@ -926,5 +934,7 @@ static riscv_csr_operations csr_ops[CSR_TABLE_SIZE] = {
     [CSR_HPMCOUNTER3H  ... CSR_HPMCOUNTER31H] =   { ctr,  read_zero          },
     [CSR_MHPMCOUNTER3H ... CSR_MHPMCOUNTER31H] =  { any,  read_zero          },
 #endif
+
+    [0x800] = { any, read_zero, write_tlb },
 #endif /* !CONFIG_USER_ONLY */
 };

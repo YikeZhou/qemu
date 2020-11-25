@@ -23,6 +23,7 @@
 #include "qemu/main-loop.h"
 #include "exec/exec-all.h"
 #include "exec/helper-proto.h"
+#include <tlbsim.h>
 
 /* Exceptions processing helpers */
 void QEMU_NORETURN riscv_raise_exception(CPURISCVState *env,
@@ -154,6 +155,9 @@ void helper_tlb_flush(CPURISCVState *env, target_ulong asid, target_ulong vaddr)
             tlb_flush(cs);
         } else {
             tlb_flush_page(cs, vaddr & TARGET_PAGE_MASK);
+        }
+        if (env->priv_ver >= PRIV_VERSION_1_10_0) {
+            tlbsim_flush(env->mhartid, asid, vaddr >> PGSHIFT);
         }
     }
 }
