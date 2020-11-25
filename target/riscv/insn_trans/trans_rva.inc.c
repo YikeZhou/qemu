@@ -21,6 +21,8 @@
 static inline bool gen_lr(DisasContext *ctx, arg_atomic *a, TCGMemOp mop)
 {
     TCGv src1 = tcg_temp_new();
+    ctx->minstret_incr_num++;
+
     /* Put addr in load_res, data in load_val.  */
     gen_get_gpr(src1, a->rs1);
     if (a->rl) {
@@ -44,6 +46,7 @@ static inline bool gen_sc(DisasContext *ctx, arg_atomic *a, TCGMemOp mop)
     TCGv dat = tcg_temp_new();
     TCGLabel *l1 = gen_new_label();
     TCGLabel *l2 = gen_new_label();
+    ctx->minstret_incr_num++;
 
     gen_get_gpr(src1, a->rs1);
     tcg_gen_brcond_tl(TCG_COND_NE, load_res, src1, l1);
@@ -81,6 +84,7 @@ static bool gen_amo(DisasContext *ctx, arg_atomic *a,
 {
     TCGv src1 = tcg_temp_new();
     TCGv src2 = tcg_temp_new();
+    ctx->minstret_incr_num++;
 
     gen_get_gpr(src1, a->rs1);
     gen_get_gpr(src2, a->rs2);

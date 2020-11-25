@@ -133,6 +133,7 @@ static bool gen_load(DisasContext *ctx, arg_lb *a, TCGMemOp memop)
 {
     TCGv t0 = tcg_temp_new();
     TCGv t1 = tcg_temp_new();
+    ctx->minstret_incr_num++;
     gen_get_gpr(t0, a->rs1);
     tcg_gen_addi_tl(t0, t0, a->imm);
 
@@ -172,6 +173,7 @@ static bool gen_store(DisasContext *ctx, arg_sb *a, TCGMemOp memop)
 {
     TCGv t0 = tcg_temp_new();
     TCGv dat = tcg_temp_new();
+    ctx->minstret_incr_num++;
     gen_get_gpr(t0, a->rs1);
     tcg_gen_addi_tl(t0, t0, a->imm);
     gen_get_gpr(dat, a->rs2);

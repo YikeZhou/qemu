@@ -21,6 +21,7 @@
 static bool trans_fld(DisasContext *ctx, arg_fld *a)
 {
     TCGv t0 = tcg_temp_new();
+    ctx->minstret_incr_num++;
     gen_get_gpr(t0, a->rs1);
     REQUIRE_FPU;
     REQUIRE_EXT(ctx, RVD);
@@ -36,6 +37,7 @@ static bool trans_fld(DisasContext *ctx, arg_fld *a)
 static bool trans_fsd(DisasContext *ctx, arg_fsd *a)
 {
     TCGv t0 = tcg_temp_new();
+    ctx->minstret_incr_num++;
     gen_get_gpr(t0, a->rs1);
     REQUIRE_FPU;
     REQUIRE_EXT(ctx, RVD);

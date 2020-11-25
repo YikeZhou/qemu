@@ -116,6 +116,9 @@ struct CPURISCVState {
 
     target_ulong tval;
 
+    uint64_t instret;
+    uint64_t minstret;
+
     target_ulong user_ver;
     target_ulong priv_ver;
     target_ulong misa;
