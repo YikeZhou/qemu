@@ -525,7 +525,7 @@ static void riscv_virt_board_machine_init(MachineClass *mc)
 {
     mc->desc = "RISC-V VirtIO Board (Privileged ISA v1.10)";
     mc->init = riscv_virt_board_init;
-    mc->max_cpus = 8; /* hardcoded limit in BBL */
+    mc->max_cpus = 32; /* hardcoded limit in BBL */
 }
 
 DEFINE_MACHINE("virt", riscv_virt_board_machine_init)
